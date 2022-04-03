@@ -1,7 +1,7 @@
 var socket = io();
 
-side = 10
-msize = 80
+side = 30
+msize = 20
 function setup() {
     createCanvas(msize * side, msize * side);
     background("#acacac");
@@ -37,9 +37,16 @@ function nkarel(matrix) {
     }
 
 }
+function kill() {
+    console.log('ikikijuy');
+    
+    socket.emit("kill")
+}
+function addGrass() {
+    socket.emit("add grass")
+}
 
-setInterval(
-    function () {
+setInterval(  function () {
     socket.on('send matrix', nkarel)
     },1000
 )

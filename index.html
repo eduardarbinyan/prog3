@@ -2,11 +2,26 @@
 <html>
 <head>
 	<title></title>
-	<meta charset="utf8">
-</head>
-<body>
+	<meta charset="utf8">	
 	<script src="socket.io/socket.io.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
 	<script src="client.js"></script>
+</head>
+<body>
+
+	<div class="tools">
+        <h1 style="color:yellowgreen">Events</h1>
+        <ul>
+            <li>
+                <button onclick="kill()">Kill them all</button>
+            </li>
+            <li>
+                <button onclick="addGrass()">Add grass</button>
+            </li>
+            <li>
+                <button onclick="addGrassEater()">Add grass eater</button>
+            </li>
+        </ul>
+    </div>
 </body>
 </html>	

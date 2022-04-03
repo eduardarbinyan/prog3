@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 server.listen(3000);
 
 matrix = []
-msize = 80
+msize = 20
 
 grassArr = []
 grassEaterArr = []
@@ -27,7 +27,7 @@ voidArr = []
 bombArr = []
 
 
-function generateMatrix(gr, grEat, pred, ghost) {
+function generateMatrix(gr, grEat, pred) {
     for (let i = 0; i < msize; i++) {
         matrix[i] = [];
         for (var j = 0; j < msize; j++) {
@@ -65,32 +65,17 @@ function generateMatrix(gr, grEat, pred, ghost) {
             i--
         }
     }
-
-    for (let i = 0; i < ghost; i++) {
-        var random1 = Math.floor(Math.random() * msize)
-        var random2 = Math.floor(Math.random() * msize)
-        if (matrix[random1][random2] == 0 || matrix[random1][random2] == 1) {
-            matrix[random1][random2] = 4
-        } else {
-            i--
-        }
-    }
-
-    matrix[msize - 1][msize - 1] = 6
-    matrix[0][msize - 1] = 6
     matrix[msize - 1][0] = 6
     
     return matrix
 
 }
 
-io.sockets.emit('send matrix', generateMatrix(100,40,20,1))
+io.sockets.emit('send matrix', generateMatrix(20,7,5))
 
 
 
-function spawn(matrix) {
-    console.log('obj???');
-    
+function spawn(matrix) { 
     for (let i = 0; i < matrix[0].length; i++) {
         for (var j = 0; j < matrix.length; j++) {
             if (matrix[i][j] == 1) {
@@ -107,16 +92,16 @@ function spawn(matrix) {
                 var pred1 = new Predator(i, j);
                 predArr.push(pred1)
             }
-            if (matrix[i][j] == 4) {
+            // if (matrix[i][j] == 4) {
 
-                var gh = new Ghost(i, j);
-                ghostArr.push(gh)
-            }
-            // if (matrix[i][j] == 6) {
-
-            //     var bombik = new Bomber(i, j);
-            //     bombArr.push(bombik)
+            //     var gh = new Ghost(i, j);
+            //     ghostArr.push(gh)
             // }
+            if (matrix[i][j] == 6) {
+
+                var bombik = new Bomber(i, j);
+                bombArr.push(bombik)
+            }
         }
     }
 io.sockets.emit('send matrix', matrix)
@@ -135,18 +120,34 @@ function gameupdate() {
         predArr[i].mul()
         predArr[i].kill()
     }
-    for (let i in ghostArr) {
-        ghostArr[i].consume()
-    }
+    // for (let i in ghostArr) {
+    //     ghostArr[i].consume()
+    // }
     for (let i in bombArr) {
         bombArr[i].fire()
     }
     io.sockets.emit("send matrix", matrix);
 }
-setInterval(gameupdate, 1000)
-
-io.on('connection', function () {
+setInterval(gameupdate, 500)
+function kill(){
+    grassArr=[]
+    grassEaterArr=[]
+    predArr=[]
+    for (let i = 0; i < msize; i++) {
+        matrix[i] = [];
+        for (var j = 0; j < msize; j++) {
+            if(matrix[i][j]!=6){
+                matrix[i][j] = 0;
+            }            
+        }
+    }
+    io.sockets.emit("send matrix",matrix)
+}
+io.on('connection', function (socket) {
     console.log('are connected');
-   spawn(matrix)
+    spawn(matrix)
+    socket.on("kill", kill);
+    // io.sockets.on("add grass", addGrass);
+    // io.sockets.on("add grassEater", addGrassEater);
 })
 

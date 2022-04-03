@@ -27,15 +27,17 @@ module.exports = class Creature {
         return found;
     }
     getNewCoordinates() {
-        this.directions = [
-            [this.x - 1, this.y - 1],
-            [this.x, this.y - 1],
-            [this.x + 1, this.y - 1],
-            [this.x - 1, this.y],
-            [this.x + 1, this.y],
-            [this.x - 1, this.y + 1],
-            [this.x, this.y + 1],
-            [this.x + 1, this.y + 1]
-        ];
+        if(this.x+1 <= matrix.length || this.y+1 <=matrix.length || this.x-1 >= matrix.length || this.y-1 >=matrix.length){
+            this.directions = [
+                [this.x - 1, this.y - 1],
+                [this.x, this.y - 1],
+                [this.x + 1, this.y - 1],
+                [this.x - 1, this.y],
+                [this.x + 1, this.y],
+                [this.x - 1, this.y + 1],
+                [this.x, this.y + 1],
+                [this.x + 1, this.y + 1]
+            ];
+        }
     }
 }
